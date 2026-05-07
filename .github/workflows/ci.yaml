@@ -1,0 +1,35 @@
+name: Pipeline HTML Simples
+
+# Quando o workflow será executado
+on:
+  push:
+    paths:
+      - "*.html"   # Executa somente quando arquivos HTML forem alterados
+
+jobs:
+
+  validar-html:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Baixa os arquivos do repositório
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+
+      # Exemplo simples de validação
+      - name: Verificar se existe index.html
+        run: |
+          if [ ! -f index.html ]; then
+            echo "Arquivo index.html não encontrado!"
+            exit 1
+          fi
+
+          echo "Arquivo encontrado com sucesso!"
+
+  notificar:
+    runs-on: ubuntu-latest
+    needs: validar-html
+
+    steps:
+      - name: Evento disparado
+        run: echo "Alteração em arquivo HTML detectada com sucesso!"
