@@ -1,0 +1,49 @@
+name: Deploy para GitHub Pages
+
+# Quando o workflow será executado
+on:
+  push:
+    branches: [ "main" ]   # Executa quando houver push na branch main
+  workflow_dispatch:       # Permite execução manual
+
+# Permissões necessárias para publicação
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Evita múltiplos deploys simultâneos
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # Ambiente obrigatório para GitHub Pages
+    environment:
+      name: github-pages
+
+    steps:
+
+      # Baixa o repositório
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+
+      # Configura ambiente do GitHub Pages
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # Faz upload dos arquivos do projeto
+      - name: Fazer upload dos arquivos
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+          name: my-pages-artifact
+
+      # Publica no GitHub Pages
+      - name: Publicar no GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: my-pages-artifact
