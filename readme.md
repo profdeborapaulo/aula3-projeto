@@ -22,6 +22,8 @@ Sempre que houver alteração em arquivos `.html` no repositório, o GitHub Acti
 .
 ├── .github
 │   └── workflows
-│       └── pipeline-html.yml
+        └──cd.yml
+│       └── ci.yml
+        └── pipeline.yml
 ├── index.html
 └── README.md
