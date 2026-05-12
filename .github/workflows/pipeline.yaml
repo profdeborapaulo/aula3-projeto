@@ -1,0 +1,39 @@
+name: Matrix Build and Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # 1. Job Inicial: Build
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executando Build
+        run: echo "Iniciando o build do projeto..."
+
+  # 2. Job com Matrix: Test (Depende do Build)
+  test:
+    name: Build ${{ matrix.os }}
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Rodando Testes
+        run: echo "Testando no sistema ${{ matrix.os }}..."
+
+  # 3. Job de Publicação: Publish (Depende do Test e requer aprovação)
+  publish:
+    name: Publish ${{ matrix.os }}
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production  # Isso cria a pausa para aprovação no GitHub
+    strategy:
+      matrix:
+        os: [Linux, macOS, Windows]
+    steps:
+      - name: Publicando
+        run: echo "Publicando versão para ${{ matrix.os }}..."
